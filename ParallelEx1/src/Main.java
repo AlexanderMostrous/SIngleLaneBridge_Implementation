@@ -6,7 +6,7 @@ public class Main {
 	
 	
 	public static void main(String[] args) {
-
+/*
 		systemStartingTime = System.currentTimeMillis();
 		bridgeDelay = 500;
 		
@@ -21,7 +21,10 @@ public class Main {
 		CarGenerator cg = new CarGenerator(s,carsPerSec);
 		
 		cg.start();
+*/
+		new CustomizeInputFrame();
 		
+
 	}
 
 }

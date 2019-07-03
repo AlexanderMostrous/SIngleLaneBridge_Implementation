@@ -19,9 +19,7 @@ public class CarGenerator extends Thread{
 			aCar = this.getNewRandomCar();
 			aCar.setMyScheduler(myScheduler);
 			aCar.start();
-			
-			//System.out.println(this.getNewRandomCar());
-			
+
 			try 
 			{
 				sleep((int)(1000/carsPerSecond));
