@@ -5,15 +5,7 @@ public class SafeNotFairQueuedScheduler extends Scheduler{
 	private int nextRedToPass, nextBlueToPass;
 
 	/*
-	 * To perasma einai asfales xwris sygkrouseis, alla einai adiko.
-	 * Ta aftokinhta pernane "opoio prolavei prwto", alla se ka8e 
-	 * plevra ths gefyras sxhmatizetai apo mia oura anamonhs.
-	 * Se realistikes syn8hkes 8a to fantazomastan ws dyo dromous
-	 * ekaterw8en ths gefyras, stous opoious sygkentrwnontai me taksh,
-	 * sthn oura, ola ta amaksia pou perimenoun gia na diasxisoun th gefyra,
-	 * kai kata tropo adiko pernaei o enas ek twn dyo prwtwn ths ka8e ouras,
-	 * thn ekastote fora.
-	 * 
+
 	 */
 	public SafeNotFairQueuedScheduler()
 	{
