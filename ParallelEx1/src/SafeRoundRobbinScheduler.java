@@ -1,17 +1,22 @@
+import java.util.concurrent.Semaphore;
 
 public class SafeRoundRobbinScheduler extends Scheduler{
 
 	private boolean bridgeIsEmpty;
 	private int nextRedToPass, nextBlueToPass, nextColour;
 	
+	private Semaphore waiting = new Semaphore(1);
+	private Semaphore leaving = new Semaphore(0);
 
 	/*
 	 * To perasma einai asfales xwris sygkrouseis kai ta aftokinhta pernane 
 	 * enallaks, ena kokkino, ena mple, ena kokkino, ena mple,...
 	 * 
 	 */
-	public SafeRoundRobbinScheduler()
+	public SafeRoundRobbinScheduler(double time, double cars)
 	{
+		super(time, cars);
+		
 		bridgeIsEmpty = true;
 		nextBlueToPass = 1;
 		nextRedToPass = 1;

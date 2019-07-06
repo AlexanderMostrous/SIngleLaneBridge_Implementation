@@ -7,8 +7,10 @@ public class SafeNotFairQueuedScheduler extends Scheduler{
 	/*
 
 	 */
-	public SafeNotFairQueuedScheduler()
+	public SafeNotFairQueuedScheduler(double time, double cars)
 	{
+		super(time, cars);
+		
 		bridgeIsEmpty = true;
 		nextBlueToPass = 1;
 		nextRedToPass = 1;

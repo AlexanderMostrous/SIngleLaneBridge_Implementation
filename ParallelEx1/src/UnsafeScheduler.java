@@ -2,7 +2,7 @@
 public class UnsafeScheduler extends Scheduler{
 
 	private int counter,totalCars;
-	
+
 	/*
 	 * To perasma den einai asfales kai mporei na
 	 * periexei sygkrouseis, ka8ws ka8e aftokinhto 
@@ -11,13 +11,22 @@ public class UnsafeScheduler extends Scheduler{
 	 * apo apenanti.
 	 * 
 	 */
-	public UnsafeScheduler(){
-				
-	}
+	public UnsafeScheduler(double time, double cars){
+		super(time, cars);	}
 
 	public synchronized void crossBridge(Car c)
 	{
+		
 		enterBridge(c);
+		try
+		{
+			Thread.sleep((int)(this.timeToCross*1000));
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+
 		exitBridge(c);
 	}
 

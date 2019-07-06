@@ -3,12 +3,14 @@ public class Car extends Thread {
 	private long arrived, passing, passed;
 	private int num, colour;//colour: 1 == blue, 2 == red
 	private Scheduler myScheduler;
+	private SystemLog myLog;
 
-	public Car(int number,int col,Scheduler aScheduler){
+	public Car(int number,int col,Scheduler aScheduler, SystemLog log){
 
 		this.num = number;
 		this.colour = col;
 		this.myScheduler = aScheduler;
+		this.myLog = log;
 	}
 
 	public void run()
@@ -50,7 +52,7 @@ public class Car extends Thread {
 		else
 			text = "Red  car";
 
-		text += " #"+this.num+" Arrived at "+ this.arrived+", started passing at "+this.passing+" and finished passing at "+this.passed+".";
+		text += " #"+this.num;
 		
 		return text;
 	}
@@ -68,7 +70,8 @@ public class Car extends Thread {
 	}
 
 	public void setArrived(long arrived) {
-		this.arrived = arrived;
+
+		myLog.writeRegistry(this+" Arrived at "+arrived);
 	}
 
 	public long getPassing() {
@@ -76,7 +79,8 @@ public class Car extends Thread {
 	}
 
 	public void setPassing(long passing) {
-		this.passing = passing;
+
+		myLog.writeRegistry(this+" Passing at "+passing);
 	}
 
 	public long getPassed() {
@@ -84,7 +88,8 @@ public class Car extends Thread {
 	}
 
 	public void setPassed(long passed) {
-		this.passed = passed;
+
+		myLog.writeRegistry(this+" Passed at "+passed);
 	}
 
 	public int getNum() {

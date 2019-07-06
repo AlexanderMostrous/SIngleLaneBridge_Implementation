@@ -1,36 +1,52 @@
+import java.util.ArrayList;
 
 public class CarGenerator extends Thread{
 
-	private int redCounter = 0, blueCounter = 0;
-	private double carsPerSecond;
+	private int redCounter = 0, blueCounter = 0, carsOnBridgeSimultaneously;
+	private double carArrivalRate, timeToCrossBridge;
 	private Scheduler myScheduler;
+	private SystemLog log;
+	private boolean stop;
 	
-	public CarGenerator(Scheduler sc, double cps){
+	public CarGenerator(double rate, double time, int carNum){
 		
-		this.myScheduler = sc;
-		carsPerSecond = cps;
+		stop = false;
+		carArrivalRate = rate;
+		timeToCrossBridge = time;
+		carsOnBridgeSimultaneously = carNum;
+		log = new SystemLog();
 	}
 
 	public void run(){
 		Car aCar;
 		
-		while(true)
+		ArrayList<Car> threadList = new ArrayList<Car>();
+		while(!stop)
 		{			
+			threadList.add(this.getNewRandomCar());
+			
 			aCar = this.getNewRandomCar();
 			aCar.setMyScheduler(myScheduler);
 			aCar.start();
-
+			threadList.add(aCar);
+			System.out.println("A new car has just been created.");
 			try 
 			{
-				sleep((int)(1000/carsPerSecond));
+				sleep((int)(1000/carArrivalRate));
 			} 
 			catch (InterruptedException e) 
 			{
 				e.printStackTrace();
 			}
-			
-			
 		}
+		for(Car c:threadList)
+			try {
+				c.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		//Now that all threads have finished running
+		log.printLogToConsole();
 	}
 	
 	public Car getNewRandomCar(){
@@ -49,23 +65,25 @@ public class CarGenerator extends Thread{
 			colour=1;
 		}
 		
-		
-		Car aCar = new Car(num,colour,this.myScheduler);
-		
-		
+		Car aCar = new Car(num,colour,this.myScheduler,log);
 		
 		aCar.setArrived(System.currentTimeMillis());//Orizetai o xronos afikshs tou amaksiou sth gefyra.
-		System.out.println("The #"+aCar.getNum()+"th "+getColText(aCar.getColour())+" car just arrived at "+aCar.getArrived()+".");
+		//System.out.println("The #"+aCar.getNum()+"th "+getColText(aCar.getColour())+" car just arrived at "+aCar.getArrived()+".");
 		return aCar;
 	}
 	
-	private String getColText(int i)
+	public void setScheduler(Scheduler aScheduler)
 	{
-		if(i==1)
-			return "blue";
-		else
-			return "red";
-				
+		this.myScheduler = aScheduler;
+	}
+
+	public SystemLog getLog() {
+		return log;
+	}
+	
+	public void stopCarProduction()
+	{
+		stop = true;
 	}
 	
 }

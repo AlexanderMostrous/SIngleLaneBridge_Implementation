@@ -8,7 +8,7 @@ import javax.swing.border.*;
 public class CustomizeInputFrame extends JFrame implements ActionListener{
 
 	private JRadioButton unsafePassingRadioButton, safePassingRadioButton, crossImmediatelyRadioButton, notFairRadioButton, alternatelyRadioButton, alternatelyWithAdjustmentsRadioButton;
-	private JTextField carArrivalRate, crossingTime;
+	private JTextField carArrivalRate, crossingTime, carsOnBridge;
 	public CustomizeInputFrame()
 	{
 		JPanel panelA = new JPanel();
@@ -52,7 +52,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		group.add(safePassingRadioButton);
 
 
-		safePassingRadioButton.setSelected(true);
+		unsafePassingRadioButton.setSelected(true);
 		p.setLayout(new GridLayout(2, 1, 0, 10));
 		p.add(unsafePassingRadioButton);p.add(safePassingRadioButton);
 
@@ -75,24 +75,36 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		gbc.gridy=0;
 		gbc.gridwidth = 1;
 		carArrivalRate = new JTextField(7);
+		carArrivalRate.setText("1.5");
 		gbc.insets = new Insets(15, 0, 5, 5);
 		p.add(carArrivalRate,gbc);
 		
 		gbc.gridx++;
 		gbc.insets = new Insets(15, 5, 5, 0);
-		p.add(new JLabel("cars/sec"),gbc);
+		p.add(new JLabel("generated cars/sec"),gbc);
 		
 		
 		gbc.gridx--;
 		gbc.gridy++;
 		crossingTime = new JTextField(7);
-		gbc.insets = new Insets(5, 0, 15, 5);
+		crossingTime.setText("0.5");
+		gbc.insets = new Insets(5, 0, 5, 5);
 		p.add(crossingTime,gbc);
 		
 		gbc.gridx++;
-		gbc.insets = new Insets(5, 5, 15, 0);
+		gbc.insets = new Insets(5, 5, 5, 0);
 		p.add(new JLabel("crossing time (secs)"),gbc);
 		
+		gbc.gridx--;
+		gbc.gridy++;
+		carsOnBridge = new JTextField(7);
+		carsOnBridge.setText("2");
+		gbc.insets = new Insets(5, 0, 15, 5);
+		p.add(carsOnBridge,gbc);
+		
+		gbc.gridx++;
+		gbc.insets = new Insets(5, 5, 15, 0);
+		p.add(new JLabel("cars on bridge simultaneously"),gbc);
 
 
 		return p;
@@ -124,7 +136,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		group.add(alternatelyWithAdjustmentsRadioButton);
 
   
-		notFairRadioButton.setSelected(true);
+		crossImmediatelyRadioButton.setSelected(true);
 		p.setLayout(new GridLayout(4, 1, 0, 10));
 		p.add(crossImmediatelyRadioButton);p.add(notFairRadioButton);p.add(alternatelyRadioButton);p.add(alternatelyWithAdjustmentsRadioButton);
 
@@ -152,10 +164,12 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		}
 		else if(e.getActionCommand().equals("OK"))
 		{
-			boolean rateIsDouble, crossingTimeIsDouble;
+			boolean rateIsDouble, crossingTimeIsDouble, carsOnBridgeIsInt;
+			double carRate = 0.0, timeToCross = 0.0;
+			int carsOnBridgeSimultaneously = 0;
 			try
 			{
-				Double.parseDouble(carArrivalRate.getText());
+				carRate = Double.parseDouble(carArrivalRate.getText());
 				rateIsDouble = true;
 			}
 			catch (NumberFormatException k)
@@ -165,7 +179,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 			}
 			try
 			{
-				Double.parseDouble(crossingTime.getText());
+				timeToCross = Double.parseDouble(crossingTime.getText());
 				crossingTimeIsDouble = true;
 			}
 			catch (NumberFormatException k)
@@ -173,12 +187,78 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 				crossingTime.setText("need double");
 				crossingTimeIsDouble = false;
 			}
+			try
+			{
+				carsOnBridgeSimultaneously = Integer.parseInt(carsOnBridge.getText());
+				carsOnBridgeIsInt = true;
+			}
+			catch (NumberFormatException k)
+			{
+				carsOnBridge.setText("need integer");
+				carsOnBridgeIsInt = false;
+			}
 			
 			//If "OK" button is a legal action
-			if(rateIsDouble&&crossingTimeIsDouble)
+			if(rateIsDouble&&crossingTimeIsDouble&&carsOnBridgeIsInt)
 			{
+				CarGenerator cg = new CarGenerator(carRate,timeToCross,carsOnBridgeSimultaneously);
+				if(safePassingRadioButton.isSelected())
+				{
+					if(notFairRadioButton.isSelected())
+						cg.setScheduler(new SafeNotFairQueuedScheduler(timeToCross, carsOnBridgeSimultaneously));
+					else if(alternatelyRadioButton.isSelected())
+						cg.setScheduler(new SafeRoundRobbinScheduler(timeToCross, carsOnBridgeSimultaneously));
+					else if(alternatelyWithAdjustmentsRadioButton.isSelected())
+						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler(timeToCross, carsOnBridgeSimultaneously));
+				}
+				else
+				{
+					cg.setScheduler(new UnsafeScheduler(timeToCross, carsOnBridgeSimultaneously));
+				}
+				cg.start();
 				
+				this.dispose();
+				new FinishButton(cg);
 			}
 		}
+	}
+	
+	public class FinishButton extends JFrame
+	{
+		CarGenerator myCarGenerator;
+		public FinishButton(CarGenerator myCarGenerator)
+		{
+			this.myCarGenerator = myCarGenerator;
+			
+			JPanel panelA = new JPanel();
+			panelA.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+			JButton finish = new JButton("Finish Experiment");
+			finish.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					if(e.getActionCommand().equals("Finish Experiment and print results"))
+					{
+						myCarGenerator.stopCarProduction();
+					}
+					
+				}
+			});
+			panelA.add(finish);
+			
+			
+			this.setContentPane(panelA);
+			this.pack();
+			this.setVisible(true);
+			this.setSize(600,150);
+			this.setTitle("Press OK to finish experiment");
+			this.setLocationRelativeTo(null);
+			this.setResizable(false);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+		
+		
 	}
 }
