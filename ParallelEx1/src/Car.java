@@ -4,7 +4,8 @@ public class Car extends Thread {
 	private int num, colour;//colour: 1 == blue, 2 == red
 	private Scheduler myScheduler;
 	private SystemLog myLog;
-
+	private boolean finishedPassing = false;
+	
 	public Car(int number,int col,Scheduler aScheduler, SystemLog log){
 
 		this.num = number;
@@ -15,11 +16,10 @@ public class Car extends Thread {
 
 	public void run()
 	{
-		while(this.passed==0)
+		while(!finishedPassing)
 		{
 				this.myScheduler.crossBridge(this);
 		}
-		System.out.println(this);
 	}
 
 
@@ -43,34 +43,33 @@ public class Car extends Thread {
 
 	public String toString(){
 
-		clearIrrelevantTime();
 
 		String text = "";
 
 		if(colour == 1)
 			text = "Blue car";
 		else
-			text = "Red  car";
+			text = "Red car";
 
 		text += " #"+this.num;
 		
 		return text;
 	}
 
-	//8etei tous xronous sxetikous ws pros thn arxh tou peiramatos.
+	/*
 	private void clearIrrelevantTime(){
 		this.arrived = arrived - Main.systemStartingTime;
 		this.passing = passing - Main.systemStartingTime;
 		this.passed = passed - Main.systemStartingTime;
 	}
-
+*/
 
 	public long getArrived() {
 		return arrived;
 	}
 
 	public void setArrived(long arrived) {
-
+		arrived -= Main.systemStartingTime;
 		myLog.writeRegistry(this+" Arrived at "+arrived);
 	}
 
@@ -79,7 +78,7 @@ public class Car extends Thread {
 	}
 
 	public void setPassing(long passing) {
-
+		passing -= Main.systemStartingTime; 
 		myLog.writeRegistry(this+" Passing at "+passing);
 	}
 
@@ -88,7 +87,7 @@ public class Car extends Thread {
 	}
 
 	public void setPassed(long passed) {
-
+		passed -= Main.systemStartingTime; 
 		myLog.writeRegistry(this+" Passed at "+passed);
 	}
 
@@ -100,5 +99,8 @@ public class Car extends Thread {
 		this.num = num;
 	}
 
-
+	public void setFinishedPassing(boolean finished)
+	{
+		finishedPassing = finished;
+	}
 }

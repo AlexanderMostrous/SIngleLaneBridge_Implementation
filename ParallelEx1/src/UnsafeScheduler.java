@@ -14,7 +14,7 @@ public class UnsafeScheduler extends Scheduler{
 	public UnsafeScheduler(double time, double cars){
 		super(time, cars);	}
 
-	public synchronized void crossBridge(Car c)
+	public void crossBridge(Car c)
 	{
 		
 		enterBridge(c);
@@ -35,7 +35,8 @@ public class UnsafeScheduler extends Scheduler{
 		c.setPassing(System.currentTimeMillis());
 	}
 
-	public void exitBridge(Car c) {
+	public synchronized void exitBridge(Car c) {
 		c.setPassed(System.currentTimeMillis());
+		c.setFinishedPassing(true);
 	}
 }

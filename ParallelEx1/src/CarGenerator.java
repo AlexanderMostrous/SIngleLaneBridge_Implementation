@@ -23,13 +23,11 @@ public class CarGenerator extends Thread{
 		ArrayList<Car> threadList = new ArrayList<Car>();
 		while(!stop)
 		{			
-			threadList.add(this.getNewRandomCar());
-			
-			aCar = this.getNewRandomCar();
+			aCar = this.getNewRandomCar();			
 			aCar.setMyScheduler(myScheduler);
 			aCar.start();
 			threadList.add(aCar);
-			System.out.println("A new car has just been created.");
+			//System.out.println("A new car has just been created.");
 			try 
 			{
 				sleep((int)(1000/carArrivalRate));
@@ -46,10 +44,11 @@ public class CarGenerator extends Thread{
 				e.printStackTrace();
 			}
 		//Now that all threads have finished running
+		System.out.println(""+redCounter+" red cars and "+blueCounter+" blue cars have been created.");
 		log.printLogToConsole();
 	}
 	
-	public Car getNewRandomCar(){
+	public synchronized Car getNewRandomCar(){
 		
 		int num, colour;		
 		if(Math.random()>=0.5)
@@ -68,7 +67,7 @@ public class CarGenerator extends Thread{
 		Car aCar = new Car(num,colour,this.myScheduler,log);
 		
 		aCar.setArrived(System.currentTimeMillis());//Orizetai o xronos afikshs tou amaksiou sth gefyra.
-		//System.out.println("The #"+aCar.getNum()+"th "+getColText(aCar.getColour())+" car just arrived at "+aCar.getArrived()+".");
+		
 		return aCar;
 	}
 	

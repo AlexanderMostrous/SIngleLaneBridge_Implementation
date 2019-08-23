@@ -26,7 +26,6 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		this.setContentPane(panelA);
 		this.pack();
 		this.setVisible(true);
-		//this.setSize(600,650);
 		this.setTitle("Customize Input");
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
@@ -201,6 +200,8 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 			//If "OK" button is a legal action
 			if(rateIsDouble&&crossingTimeIsDouble&&carsOnBridgeIsInt)
 			{
+				Main.systemStartingTime = System.currentTimeMillis();
+
 				CarGenerator cg = new CarGenerator(carRate,timeToCross,carsOnBridgeSimultaneously);
 				if(safePassingRadioButton.isSelected())
 				{
@@ -226,8 +227,10 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 	public class FinishButton extends JFrame
 	{
 		CarGenerator myCarGenerator;
+		JFrame f;
 		public FinishButton(CarGenerator myCarGenerator)
 		{
+			f = this;
 			this.myCarGenerator = myCarGenerator;
 			
 			JPanel panelA = new JPanel();
@@ -239,9 +242,11 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					if(e.getActionCommand().equals("Finish Experiment and print results"))
+					if(e.getActionCommand().equals("Finish Experiment"))
 					{
 						myCarGenerator.stopCarProduction();
+						f.dispose();
+						//FinishButton.this.myCarGenerator.getLog().printLogToConsole();
 					}
 					
 				}
