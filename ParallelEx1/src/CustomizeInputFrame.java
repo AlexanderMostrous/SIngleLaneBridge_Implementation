@@ -154,7 +154,6 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		{
 			boolean rateIsDouble, crossingTimeIsDouble, carsOnBridgeIsInt;
 			double carRate = 0.0, timeToCross = 0.0;
-			int carsOnBridgeSimultaneously = 0;
 			try
 			{
 				carRate = Double.parseDouble(carArrivalRate.getText());
@@ -183,19 +182,19 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 			{
 				Main.systemStartingTime = System.currentTimeMillis();
 
-				CarGenerator cg = new CarGenerator(carRate,timeToCross,carsOnBridgeSimultaneously);
+				CarGenerator cg = new CarGenerator(carRate,timeToCross);
 				if(safePassingRadioButton.isSelected())
 				{
 					if(notFairRadioButton.isSelected())
-						cg.setScheduler(new SafeNotFairQueuedScheduler(timeToCross, carsOnBridgeSimultaneously));
+						cg.setScheduler(new SafeNotFairQueuedScheduler(timeToCross));
 					else if(alternatelyRadioButton.isSelected())
-						cg.setScheduler(new SafeRoundRobbinScheduler(timeToCross, carsOnBridgeSimultaneously));
+						cg.setScheduler(new SafeRoundRobbinScheduler(timeToCross));
 					else if(alternatelyWithAdjustmentsRadioButton.isSelected())
-						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler(timeToCross, carsOnBridgeSimultaneously));
+						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler(timeToCross));
 				}
 				else
 				{
-					cg.setScheduler(new UnsafeScheduler(timeToCross, carsOnBridgeSimultaneously));
+					cg.setScheduler(new UnsafeScheduler(timeToCross));
 				}
 				cg.start();
 				

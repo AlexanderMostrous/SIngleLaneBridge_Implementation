@@ -11,9 +11,9 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 	 * An omws kseperastei ena sygkekrimeno xroniko threshold pernaei o prwtos ths idias ouras.
 	 * 
 	 */
-	public SafeRoundRobbinWithAdjustmentsScheduler(double time, double cars)
+	public SafeRoundRobbinWithAdjustmentsScheduler(double time)
 	{
-		super(time, cars);
+		super(time);
 		
 		bridgeIsEmpty = true;
 		nextBlueToPass = 1;

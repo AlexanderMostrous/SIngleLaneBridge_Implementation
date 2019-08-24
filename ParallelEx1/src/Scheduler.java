@@ -2,10 +2,9 @@
 public abstract class Scheduler{
 
 	protected double timeToCross, carsOnBridgeSimultaneously;
-	public Scheduler(double time, double cars)
+	public Scheduler(double time)
 	{
 		timeToCross = time;
-		carsOnBridgeSimultaneously = cars;
 	}
 	public abstract void crossBridge(Car c);
 	public abstract void enterBridge(Car c);

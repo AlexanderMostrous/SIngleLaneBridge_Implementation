@@ -11,8 +11,8 @@ public class UnsafeScheduler extends Scheduler{
 	 * apo apenanti.
 	 * 
 	 */
-	public UnsafeScheduler(double time, double cars){
-		super(time, cars);	}
+	public UnsafeScheduler(double time){
+		super(time);	}
 
 	public void crossBridge(Car c)
 	{

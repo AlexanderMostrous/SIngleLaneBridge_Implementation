@@ -2,18 +2,17 @@ import java.util.ArrayList;
 
 public class CarGenerator extends Thread{
 
-	private int redCounter = 0, blueCounter = 0, carsOnBridgeSimultaneously;
+	private int redCounter = 0, blueCounter = 0;
 	private double carArrivalRate, timeToCrossBridge;
 	private Scheduler myScheduler;
 	private SystemLog log;
 	private boolean stop;
 	
-	public CarGenerator(double rate, double time, int carNum){
+	public CarGenerator(double rate, double time){
 		
 		stop = false;
 		carArrivalRate = rate;
 		timeToCrossBridge = time;
-		carsOnBridgeSimultaneously = carNum;
 		log = new SystemLog();
 	}
 
