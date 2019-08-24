@@ -8,7 +8,7 @@ import javax.swing.border.*;
 public class CustomizeInputFrame extends JFrame implements ActionListener{
 
 	private JRadioButton unsafePassingRadioButton, safePassingRadioButton, crossImmediatelyRadioButton, notFairRadioButton, alternatelyRadioButton, alternatelyWithAdjustmentsRadioButton;
-	private JTextField carArrivalRate, crossingTime, carsOnBridge;
+	private JTextField carArrivalRate, crossingTime;
 	public CustomizeInputFrame()
 	{
 		JPanel panelA = new JPanel();
@@ -93,17 +93,6 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		gbc.gridx++;
 		gbc.insets = new Insets(5, 5, 5, 0);
 		p.add(new JLabel("crossing time (secs)"),gbc);
-		
-		gbc.gridx--;
-		gbc.gridy++;
-		carsOnBridge = new JTextField(7);
-		carsOnBridge.setText("2");
-		gbc.insets = new Insets(5, 0, 15, 5);
-		p.add(carsOnBridge,gbc);
-		
-		gbc.gridx++;
-		gbc.insets = new Insets(5, 5, 15, 0);
-		p.add(new JLabel("cars on bridge simultaneously"),gbc);
 
 
 		return p;
@@ -186,19 +175,11 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 				crossingTime.setText("need double");
 				crossingTimeIsDouble = false;
 			}
-			try
-			{
-				carsOnBridgeSimultaneously = Integer.parseInt(carsOnBridge.getText());
-				carsOnBridgeIsInt = true;
-			}
-			catch (NumberFormatException k)
-			{
-				carsOnBridge.setText("need integer");
-				carsOnBridgeIsInt = false;
-			}
+
+
 			
 			//If "OK" button is a legal action
-			if(rateIsDouble&&crossingTimeIsDouble&&carsOnBridgeIsInt)
+			if(rateIsDouble&&crossingTimeIsDouble)
 			{
 				Main.systemStartingTime = System.currentTimeMillis();
 
