@@ -74,7 +74,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		gbc.gridy=0;
 		gbc.gridwidth = 1;
 		carArrivalRate = new JTextField(7);
-		carArrivalRate.setText("1.5");
+		carArrivalRate.setText("1.0");
 		gbc.insets = new Insets(15, 0, 5, 5);
 		p.add(carArrivalRate,gbc);
 		
@@ -86,7 +86,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		gbc.gridx--;
 		gbc.gridy++;
 		crossingTime = new JTextField(7);
-		crossingTime.setText("0.5");
+		crossingTime.setText("2.0");
 		gbc.insets = new Insets(5, 0, 5, 5);
 		p.add(crossingTime,gbc);
 		
@@ -152,7 +152,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		}
 		else if(e.getActionCommand().equals("OK"))
 		{
-			boolean rateIsDouble, crossingTimeIsDouble, carsOnBridgeIsInt;
+			boolean rateIsDouble, crossingTimeIsDouble;
 			double carRate = 0.0, timeToCross = 0.0;
 			try
 			{
@@ -219,7 +219,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 			JButton finish = new JButton("Finish Experiment");
 			finish.addActionListener(new ActionListener() {
 				
-				@Override
+			
 				public void actionPerformed(ActionEvent e) {
 					
 					if(e.getActionCommand().equals("Finish Experiment"))

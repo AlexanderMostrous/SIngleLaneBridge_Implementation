@@ -20,6 +20,7 @@ public class Car extends Thread {
 		{
 				this.myScheduler.crossBridge(this);
 		}
+		System.out.println(this+" FINISHED!");
 	}
 
 

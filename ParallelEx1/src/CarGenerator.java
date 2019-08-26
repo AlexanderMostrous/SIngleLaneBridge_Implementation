@@ -7,9 +7,9 @@ public class CarGenerator extends Thread{
 	private Scheduler myScheduler;
 	private SystemLog log;
 	private boolean stop;
-	
+
 	public CarGenerator(double rate, double time){
-		
+
 		stop = false;
 		carArrivalRate = rate;
 		timeToCrossBridge = time;
@@ -18,7 +18,7 @@ public class CarGenerator extends Thread{
 
 	public void run(){
 		Car aCar;
-		
+
 		ArrayList<Car> threadList = new ArrayList<Car>();
 		while(!stop)
 		{			
@@ -26,7 +26,7 @@ public class CarGenerator extends Thread{
 			aCar.setMyScheduler(myScheduler);
 			aCar.start();
 			threadList.add(aCar);
-			//System.out.println("A new car has just been created.");
+			System.out.println("A new car has just been created.");
 			try 
 			{
 				sleep((int)(1000/carArrivalRate));
@@ -37,18 +37,18 @@ public class CarGenerator extends Thread{
 			}
 		}
 		for(Car c:threadList)
-			try {
+			try 
+			{
 				c.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			}catch (InterruptedException e) {e.printStackTrace();}
+
 		//Now that all threads have finished running
 		System.out.println(""+redCounter+" red cars and "+blueCounter+" blue cars have been created.");
 		log.printLogToConsole();
 	}
-	
+
 	public synchronized Car getNewRandomCar(){
-		
+
 		int num, colour;		
 		if(Math.random()>=0.5)
 		{
@@ -62,14 +62,14 @@ public class CarGenerator extends Thread{
 			num = blueCounter;
 			colour=1;
 		}
-		
+
 		Car aCar = new Car(num,colour,this.myScheduler,log);
-		
+
 		aCar.setArrived(System.currentTimeMillis());//Orizetai o xronos afikshs tou amaksiou sth gefyra.
-		
+
 		return aCar;
 	}
-	
+
 	public void setScheduler(Scheduler aScheduler)
 	{
 		this.myScheduler = aScheduler;
@@ -78,10 +78,10 @@ public class CarGenerator extends Thread{
 	public SystemLog getLog() {
 		return log;
 	}
-	
+
 	public void stopCarProduction()
 	{
 		stop = true;
 	}
-	
+
 }
