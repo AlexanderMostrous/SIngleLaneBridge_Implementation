@@ -209,7 +209,10 @@ public class CustomizeInputFrame extends JFrame implements ActionListener
 					else if(alternatelyRadioButton.isSelected())
 						cg.setScheduler(new SafeRoundRobbinScheduler(timeToCross));
 					else if(alternatelyWithAdjustmentsRadioButton.isSelected())
+					{
 						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler(timeToCross));
+						cg.getScheduler()
+					}
 				}
 				else
 				{

@@ -1,7 +1,7 @@
 
 public abstract class Scheduler{
 
-	protected double timeToCross, carsOnBridgeSimultaneously;
+	protected double timeToCross;
 	public Scheduler(double time)
 	{
 		timeToCross = time;

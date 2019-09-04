@@ -66,6 +66,11 @@ public class CarGenerator extends Thread{
 	{
 		this.myScheduler = aScheduler;
 	}
+	
+	public Scheduler getScheduler()
+	{
+		return this.myScheduler;
+	}
 
 	public SystemLog getLog() {
 		return log;
@@ -76,4 +81,8 @@ public class CarGenerator extends Thread{
 		stop = true;
 	}
 
+	public double getCarArrivalRate()
+	{
+		return this.carArrivalRate;
+	}
 }

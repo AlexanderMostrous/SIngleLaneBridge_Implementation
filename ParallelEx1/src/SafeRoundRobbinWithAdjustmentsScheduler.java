@@ -3,15 +3,10 @@ import java.util.concurrent.Semaphore;
 public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 
 	private int nextColour;
-
+	private long timeThreshold;
 	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1);
 
-	/*
-	 * To perasma einai asfales xwris sygkrouseis kai ta aftokinhta pernane 
-	 * enallaks, ena kokkino, ena mple, ena kokkino, ena mple,...
-	 * 
-	 */
-	public SafeRoundRobbinScheduler(double time)
+	public SafeRoundRobbinWithAdjustmentsScheduler(double time)
 	{
 		super(time);
 		nextColour = 0;
@@ -20,54 +15,62 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 	public void crossBridge(Car c)
 	{
 		while(true){
-		try 
-		{
-			
-			if(nextColour==0)//Beginning condition. Car is the first car.
+			try 
 			{
-				if(c.getColour()==1)//If is blue car
+
+				if(nextColour==0)//Beginning condition. Car is the first car.
+				{
+					if(c.getColour()==1)//If is blue car
+					{
+						redSem.acquire();
+						nextColour=1;
+					}
+					else//If is red car
+					{
+						blueSem.acquire();
+						nextColour=2;
+					}
+				}
+
+				if((carCounter>=3)&&(c.getColour()==1))//There is an abundance of blue cars and current car is blue.
 				{
 					redSem.acquire();
-					nextColour=1;
+					blueSem.release();
 				}
-				else//If is red car
+				else if((carCounter<=-3)&&(c.getColour()==2))//There is an abundance of red cars and current car is red.
 				{
-					blueSem.acquire();
-					nextColour=2;
+
 				}
+				else
+				{
+					if(c.getColour()==1)//If blue
+					{
+						blueSem.acquire();
+					}
+					else//If red
+					{
+						redSem.acquire();
+					}
+
+				}
+				enterBridge(c);
+
+				Thread.sleep((int)(this.timeToCross*1000));
+
+				exitBridge(c);
+				if(c.getColour()==1)
+				{
+					redSem.release();
+
+				}
+				else
+				{
+					blueSem.release();
+				}
+				break;
+
 			}
-
-			if(c.getColour()==1)//If blue
-			{
-				blueSem.acquire();
-				//System.out.println("Blue semaphore acquired.");
-			}
-			else//If red
-			{
-				redSem.acquire();
-				//System.out.println("Red semaphore acquired.");
-			}
-
-
-			enterBridge(c);
-
-			Thread.sleep((int)(this.timeToCross*1000));
-
-			exitBridge(c);
-			if(c.getColour()==1)
-			{
-				redSem.release();
-				//System.out.println("Red semaphore released.");
-			}
-			else
-			{
-				blueSem.release();
-				//System.out.println("Blue semaphore released.");
-			}
-			break;
-
-		}
-		catch (InterruptedException e){e.printStackTrace();}
+			catch (InterruptedException e){e.printStackTrace();}
 		}
 	}
 
@@ -81,4 +84,10 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 		c.setFinishedPassing(true);
 	}
 
+	private void calculateThreshold()
+	{
+		if(this.timeToCross>=carArrivalWaitingTime)
+			timeThreshold = (long) (timeToCross*3);
+		else
+	}
 }
