@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 
 public class Car extends Thread {
 	private long arrived, passing, passed;
@@ -20,7 +21,6 @@ public class Car extends Thread {
 		{
 				this.myScheduler.crossBridge(this);
 		}
-		System.out.println(this+" FINISHED!");
 	}
 
 
@@ -48,7 +48,7 @@ public class Car extends Thread {
 		String text = "";
 
 		if(colour == 1)
-			text = "Blue car";
+			text = "                                     "+"Blue car";
 		else
 			text = "Red car";
 
@@ -104,4 +104,5 @@ public class Car extends Thread {
 	{
 		finishedPassing = finished;
 	}
+		
 }

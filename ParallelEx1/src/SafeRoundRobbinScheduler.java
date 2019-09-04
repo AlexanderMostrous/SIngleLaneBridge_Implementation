@@ -4,7 +4,7 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 
 	private int nextColour;
 
-	private Semaphore bridgeOccupied = new Semaphore(1), blueSem = new Semaphore(1), redSem = new Semaphore(1);
+	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1);
 
 	/*
 	 * To perasma einai asfales xwris sygkrouseis kai ta aftokinhta pernane 
@@ -22,7 +22,7 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 		while(true){
 		try 
 		{
-			//bridgeOccupied.acquire();
+			
 			if(nextColour==0)//Beginning condition. Car is the first car.
 			{
 				if(c.getColour()==1)//If is blue car
@@ -40,12 +40,12 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 			if(c.getColour()==1)//If blue
 			{
 				blueSem.acquire();
-				System.out.println("Blue semaphore acquired.");
+				//System.out.println("Blue semaphore acquired.");
 			}
 			else//If red
 			{
 				redSem.acquire();
-				System.out.println("Red semaphore acquired.");
+				//System.out.println("Red semaphore acquired.");
 			}
 
 
@@ -57,12 +57,12 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 			if(c.getColour()==1)
 			{
 				redSem.release();
-				System.out.println("Red semaphore released.");
+				//System.out.println("Red semaphore released.");
 			}
 			else
 			{
 				blueSem.release();
-				System.out.println("Blue semaphore released.");
+				//System.out.println("Blue semaphore released.");
 			}
 			break;
 

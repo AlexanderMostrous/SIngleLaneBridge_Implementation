@@ -1,30 +1,51 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SystemLog {
 
-	private ArrayList<String> log;
-	
-	public SystemLog()
+	//private ArrayList<String> log;
+	private String directory, newLineProperty;
+	private FileWriter writer;
+
+	public SystemLog(String dir)
 	{
-		log = new ArrayList<String>();
+		this.directory = dir;
+		newLineProperty = System.getProperty("line.separator");
+
+		try
+		{
+			writer = new FileWriter(directory+"\\test.txt");
+			writer.write("Left Side                     Bridge           RightSide"+newLineProperty);
+		}
+		 catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public synchronized void writeRegistry(String text)
 	{
-		log.add(text);
+
+		try {
+			writer.write(text+newLineProperty);
+		} catch (IOException e) {
+			//e.printStackTrace();
+			//No need to do anything
+		}
+
 	}
 	
-	public void printLogToConsole()
+	public void setDirectory(String dir)
 	{
-		for(int i=0;i<2;i++)
-			System.out.println();
-		System.out.println("Left Side                     Bridge           RightSide");
-		for(String s:log)
-			if(s.startsWith("B"))
-				System.out.println("                                     "+s);
-			else
-				System.out.println(s);
-			
-				
+		this.directory = dir;
+	}
+	
+	public void closeWriter()
+	{
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

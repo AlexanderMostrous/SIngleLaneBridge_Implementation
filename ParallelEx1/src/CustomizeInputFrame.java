@@ -1,11 +1,16 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class CustomizeInputFrame extends JFrame implements ActionListener{
+public class CustomizeInputFrame extends JFrame implements ActionListener
+{
 
 	private JRadioButton unsafePassingRadioButton, safePassingRadioButton, crossImmediatelyRadioButton, notFairRadioButton, alternatelyRadioButton, alternatelyWithAdjustmentsRadioButton;
 	private JTextField carArrivalRate, crossingTime;
@@ -22,7 +27,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		JButton ok = new JButton("OK");
 		ok.addActionListener(this);
 		panelA.add(ok);
-		
+
 		this.setContentPane(panelA);
 		this.pack();
 		this.setVisible(true);
@@ -64,8 +69,8 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		p.setLayout(new GridBagLayout());
 		Border blackline = BorderFactory.createTitledBorder("Rate");
 		p.setBorder(blackline);
-		
-		
+
+
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -77,19 +82,19 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		carArrivalRate.setText("1.0");
 		gbc.insets = new Insets(15, 0, 5, 5);
 		p.add(carArrivalRate,gbc);
-		
+
 		gbc.gridx++;
 		gbc.insets = new Insets(15, 5, 5, 0);
 		p.add(new JLabel("generated cars/sec"),gbc);
-		
-		
+
+
 		gbc.gridx--;
 		gbc.gridy++;
 		crossingTime = new JTextField(7);
 		crossingTime.setText("2.0");
 		gbc.insets = new Insets(5, 0, 5, 5);
 		p.add(crossingTime,gbc);
-		
+
 		gbc.gridx++;
 		gbc.insets = new Insets(5, 5, 5, 0);
 		p.add(new JLabel("crossing time (secs)"),gbc);
@@ -123,7 +128,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		group.add(alternatelyRadioButton);
 		group.add(alternatelyWithAdjustmentsRadioButton);
 
-  
+
 		crossImmediatelyRadioButton.setSelected(true);
 		p.setLayout(new GridLayout(4, 1, 0, 10));
 		p.add(crossImmediatelyRadioButton);p.add(notFairRadioButton);p.add(alternatelyRadioButton);p.add(alternatelyWithAdjustmentsRadioButton);
@@ -131,7 +136,8 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 		return p;
 	}
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) 
+	{
 
 		if(e.getSource().equals(unsafePassingRadioButton))
 		{
@@ -176,13 +182,26 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 			}
 
 
-			
+
 			//If "OK" button is a legal action
 			if(rateIsDouble&&crossingTimeIsDouble)
 			{
+
+				int returnVal =0;
+
+				this.setVisible(false);
+				final JFileChooser fc = new JFileChooser("C:\\Users\\alexandros\\Desktop");
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				String directory = "";
+				do{
+					returnVal = fc.showOpenDialog(null);
+					directory = fc.getSelectedFile().getAbsolutePath();
+
+				}while(returnVal != JFileChooser.APPROVE_OPTION);
+
 				Main.systemStartingTime = System.currentTimeMillis();
 
-				CarGenerator cg = new CarGenerator(carRate,timeToCross);
+				CarGenerator cg = new CarGenerator(carRate,timeToCross,directory);
 				if(safePassingRadioButton.isSelected())
 				{
 					if(notFairRadioButton.isSelected())
@@ -197,53 +216,53 @@ public class CustomizeInputFrame extends JFrame implements ActionListener{
 					cg.setScheduler(new UnsafeScheduler(timeToCross));
 				}
 				cg.start();
-				
+
 				this.dispose();
 				new FinishButton(cg);
 			}
 		}
 	}
-	
-	public class FinishButton extends JFrame
-	{
-		CarGenerator myCarGenerator;
-		JFrame f;
-		public FinishButton(CarGenerator myCarGenerator)
-		{
-			f = this;
-			this.myCarGenerator = myCarGenerator;
-			
-			JPanel panelA = new JPanel();
-			panelA.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-			JButton finish = new JButton("Finish Experiment");
-			finish.addActionListener(new ActionListener() {
-				
-			
-				public void actionPerformed(ActionEvent e) {
-					
-					if(e.getActionCommand().equals("Finish Experiment"))
-					{
-						myCarGenerator.stopCarProduction();
-						f.dispose();
-						//FinishButton.this.myCarGenerator.getLog().printLogToConsole();
-					}
-					
+public class FinishButton extends JFrame
+{
+	CarGenerator myCarGenerator;
+	JFrame f;
+	public FinishButton(CarGenerator cg)
+	{
+		f = this;
+		this.myCarGenerator = cg;
+
+		JPanel panelA = new JPanel();
+		panelA.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		JButton finish = new JButton("Finish Experiment");
+		finish.addActionListener(new ActionListener() {
+
+
+			public void actionPerformed(ActionEvent e) {
+
+				if(e.getActionCommand().equals("Finish Experiment"))
+				{
+					myCarGenerator.stopCarProduction();
+					f.dispose();
 				}
-			});
-			panelA.add(finish);
-			
-			
-			this.setContentPane(panelA);
-			this.pack();
-			this.setVisible(true);
-			this.setSize(600,150);
-			this.setTitle("Press OK to finish experiment");
-			this.setLocationRelativeTo(null);
-			this.setResizable(false);
-			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		}
-		
-		
+
+			}
+		});
+		panelA.add(finish);
+
+
+		this.setContentPane(panelA);
+		this.pack();
+		this.setVisible(true);
+		this.setSize(600,150);
+		this.setTitle("Press OK to finish experiment");
+		this.setLocationRelativeTo(null);
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+
+
+}
+
 }
