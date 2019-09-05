@@ -3,23 +3,30 @@ import java.util.concurrent.Semaphore;
 public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 
 	private int nextColour;
-	private long timeThreshold;
+	private long timeThreshold, timeLastBluePassed, timeLastRedPassed;
 	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1);
 
-	public SafeRoundRobbinWithAdjustmentsScheduler(double time)
+	public SafeRoundRobbinWithAdjustmentsScheduler()
 	{
-		super(time);
+		calculateThreshold();
 		nextColour = 0;
+		timeLastBluePassed = 0;
+		timeLastRedPassed = 0;
 	}
 
 	public void crossBridge(Car c)
 	{
+		long currentTime;
+		
 		while(true){
 			try 
 			{
 
 				if(nextColour==0)//Beginning condition. Car is the first car.
 				{
+					currentTime = System.currentTimeMillis();
+					timeLastBluePassed = currentTime;
+					timeLastRedPassed = currentTime;
 					if(c.getColour()==1)//If is blue car
 					{
 						redSem.acquire();
@@ -32,15 +39,26 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 					}
 				}
 
-				if((carCounter>=3)&&(c.getColour()==1))//There is an abundance of blue cars and current car is blue.
-				{
-					redSem.acquire();
-					blueSem.release();
+				
+				currentTime = System.currentTimeMillis();
+				
+				//If we have a big wait in queue.
+				if(currentTime-timeLastBluePassed>timeThreshold||currentTime-timeLastRedPassed>timeThreshold)//Big wait in queue.
+				{//If the big wait is on blue cars and the car trying to cross is blue
+					if(currentTime-timeLastBluePassed>timeThreshold&&c.getColour()==1)
+					{//Then the blue queue must be prioritized.
+						blueSem.release();
+						blueSem.acquire();
+						System.out.println("sequence altered");
+					}//If the big wait is on red cars and the car trying to cross is red
+					else if(currentTime-timeLastRedPassed>timeThreshold&&c.getColour()==2)
+					{//Then the red queue must be prioritized.
+						redSem.release();
+						redSem.acquire();
+						System.out.println("sequence altered");
+					}
 				}
-				else if((carCounter<=-3)&&(c.getColour()==2))//There is an abundance of red cars and current car is red.
-				{
-
-				}
+				
 				else
 				{
 					if(c.getColour()==1)//If blue
@@ -55,16 +73,18 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 				}
 				enterBridge(c);
 
-				Thread.sleep((int)(this.timeToCross*1000));
+				Thread.sleep((int)(Main.crossingTime*1000));
 
 				exitBridge(c);
 				if(c.getColour()==1)
 				{
+					timeLastBluePassed = System.currentTimeMillis();
 					redSem.release();
 
 				}
 				else
 				{
+					timeLastRedPassed = System.currentTimeMillis();
 					blueSem.release();
 				}
 				break;
@@ -86,8 +106,10 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 
 	private void calculateThreshold()
 	{
-		if(this.timeToCross>=carArrivalWaitingTime)
-			timeThreshold = (long) (timeToCross*3);
+		if(Main.crossingTime>=1/Main.carRate)//If time taken for the bridge-crossing is bigger than the time taken for the next car to arrive then 
+			timeThreshold = (long) (Main.crossingTime*2000);
 		else
+			timeThreshold = (long) (Main.crossingTime*1500);
+		System.out.println(timeThreshold);
 	}
 }
