@@ -4,7 +4,7 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 
 	private int nextColour;
 	private long timeThreshold, timeLastBluePassed, timeLastRedPassed;
-	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1);
+	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1), arbitrator = new Semaphore(1);
 
 	public SafeRoundRobbinWithAdjustmentsScheduler()
 	{
@@ -21,7 +21,7 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 		while(true){
 			try 
 			{
-
+				arbitrator.acquire();
 				if(nextColour==0)//Beginning condition. Car is the first car.
 				{
 					currentTime = System.currentTimeMillis();
@@ -38,26 +38,25 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 						nextColour=2;
 					}
 				}
-
+				
 				
 				currentTime = System.currentTimeMillis();
 				
 				//If we have a big wait in queue.
 				if(currentTime-timeLastBluePassed>timeThreshold||currentTime-timeLastRedPassed>timeThreshold)//Big wait in queue.
 				{//If the big wait is on blue cars and the car trying to cross is blue
-					if(currentTime-timeLastBluePassed>timeThreshold&&c.getColour()==1)
+					
+					if(currentTime-timeLastBluePassed>timeThreshold&&nextColour==1)
 					{//Then the blue queue must be prioritized.
 						blueSem.release();
-						blueSem.acquire();
-						System.out.println("sequence altered");
 					}//If the big wait is on red cars and the car trying to cross is red
-					else if(currentTime-timeLastRedPassed>timeThreshold&&c.getColour()==2)
+					else if(currentTime-timeLastRedPassed>timeThreshold&&nextColour==2)
 					{//Then the red queue must be prioritized.
 						redSem.release();
-						redSem.acquire();
-						System.out.println("sequence altered");
 					}
+					
 				}
+				
 				
 				else
 				{
@@ -69,8 +68,8 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 					{
 						redSem.acquire();
 					}
-
 				}
+				
 				enterBridge(c);
 
 				Thread.sleep((int)(Main.crossingTime*1000));
