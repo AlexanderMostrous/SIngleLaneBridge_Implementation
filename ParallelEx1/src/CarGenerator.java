@@ -3,15 +3,13 @@ import java.util.ArrayList;
 public class CarGenerator extends Thread{
 
 	private int redCounter = 0, blueCounter = 0;
-	private double carArrivalRate;
 	private Scheduler myScheduler;
 	private SystemLog log;
 	private boolean stop;
 
-	public CarGenerator(double rate, double time, String directory){
+	public CarGenerator(String directory){
 
 		stop = false;
-		carArrivalRate = rate;
 		log = new SystemLog(directory);
 	}
 
@@ -28,7 +26,7 @@ public class CarGenerator extends Thread{
 			//System.out.println("A new car has just been created.");
 			try 
 			{
-				sleep((int)(1000/carArrivalRate));
+				sleep((int)(1000/Main.carRate));
 			} 
 			catch (InterruptedException e) 
 			{
@@ -81,8 +79,4 @@ public class CarGenerator extends Thread{
 		stop = true;
 	}
 
-	public double getCarArrivalRate()
-	{
-		return this.carArrivalRate;
-	}
 }

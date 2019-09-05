@@ -11,9 +11,8 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 	 * enallaks, ena kokkino, ena mple, ena kokkino, ena mple,...
 	 * 
 	 */
-	public SafeRoundRobbinScheduler(double time)
+	public SafeRoundRobbinScheduler()
 	{
-		super(time);
 		nextColour = 0;
 	}
 
@@ -51,7 +50,7 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 
 			enterBridge(c);
 
-			Thread.sleep((int)(this.timeToCross*1000));
+			Thread.sleep((int)(Main.crossingTime*1000));
 
 			exitBridge(c);
 			if(c.getColour()==1)

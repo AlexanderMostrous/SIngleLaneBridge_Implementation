@@ -4,9 +4,9 @@ public class SafeNotFairQueuedScheduler extends Scheduler{
 
 	private Semaphore bridgeOccupied = new Semaphore(1);
 
-	public SafeNotFairQueuedScheduler(double time)
+	public SafeNotFairQueuedScheduler()
 	{
-		super(time);
+		
 	}
 
 	public void crossBridge(Car c)
@@ -17,7 +17,7 @@ public class SafeNotFairQueuedScheduler extends Scheduler{
 			{
 				bridgeOccupied.acquire();
 				enterBridge(c);
-				Thread.sleep((int)(this.timeToCross*1000));
+				Thread.sleep((int)(Main.crossingTime*1000));
 				exitBridge(c);
 				bridgeOccupied.release();
 				

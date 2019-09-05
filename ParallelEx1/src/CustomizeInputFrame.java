@@ -159,10 +159,10 @@ public class CustomizeInputFrame extends JFrame implements ActionListener
 		else if(e.getActionCommand().equals("OK"))
 		{
 			boolean rateIsDouble, crossingTimeIsDouble;
-			double carRate = 0.0, timeToCross = 0.0;
+			
 			try
 			{
-				carRate = Double.parseDouble(carArrivalRate.getText());
+				Main.carRate = Double.parseDouble(carArrivalRate.getText());
 				rateIsDouble = true;
 			}
 			catch (NumberFormatException k)
@@ -172,7 +172,7 @@ public class CustomizeInputFrame extends JFrame implements ActionListener
 			}
 			try
 			{
-				timeToCross = Double.parseDouble(crossingTime.getText());
+				Main.crossingTime = Double.parseDouble(crossingTime.getText());
 				crossingTimeIsDouble = true;
 			}
 			catch (NumberFormatException k)
@@ -193,7 +193,8 @@ public class CustomizeInputFrame extends JFrame implements ActionListener
 				final JFileChooser fc = new JFileChooser("C:\\Users\\alexandros\\Desktop");
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				String directory = "";
-				do{
+				do
+				{
 					returnVal = fc.showOpenDialog(null);
 					directory = fc.getSelectedFile().getAbsolutePath();
 
@@ -201,22 +202,19 @@ public class CustomizeInputFrame extends JFrame implements ActionListener
 
 				Main.systemStartingTime = System.currentTimeMillis();
 
-				CarGenerator cg = new CarGenerator(carRate,timeToCross,directory);
+				CarGenerator cg = new CarGenerator(directory);
 				if(safePassingRadioButton.isSelected())
 				{
 					if(notFairRadioButton.isSelected())
-						cg.setScheduler(new SafeNotFairQueuedScheduler(timeToCross));
+						cg.setScheduler(new SafeNotFairQueuedScheduler());
 					else if(alternatelyRadioButton.isSelected())
-						cg.setScheduler(new SafeRoundRobbinScheduler(timeToCross));
+						cg.setScheduler(new SafeRoundRobbinScheduler());
 					else if(alternatelyWithAdjustmentsRadioButton.isSelected())
-					{
-						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler(timeToCross));
-						cg.getScheduler()
-					}
+						cg.setScheduler(new SafeRoundRobbinWithAdjustmentsScheduler());
 				}
 				else
 				{
-					cg.setScheduler(new UnsafeScheduler(timeToCross));
+					cg.setScheduler(new UnsafeScheduler());
 				}
 				cg.start();
 
