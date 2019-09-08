@@ -6,6 +6,9 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 	private long timeThreshold, timeLastBluePassed, timeLastRedPassed;
 	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1), arbitrator = new Semaphore(1);
 
+	/*
+	 * Not yet Working as Planned
+	 */
 	public SafeRoundRobbinWithAdjustmentsScheduler()
 	{
 		calculateThreshold();
