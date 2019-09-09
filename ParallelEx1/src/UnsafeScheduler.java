@@ -1,8 +1,5 @@
-
-public class UnsafeScheduler extends Scheduler{
-
-
-
+public class UnsafeScheduler extends Scheduler
+{
 	/*
 	 * To perasma den einai asfales kai mporei na
 	 * periexei sygkrouseis, ka8ws ka8e aftokinhto 
@@ -11,14 +8,9 @@ public class UnsafeScheduler extends Scheduler{
 	 * apo apenanti.
 	 * 
 	 */
-	public UnsafeScheduler()
-	{
-		
-	}
 
 	public void crossBridge(Car c)
 	{
-		
 		enterBridge(c);
 		try
 		{

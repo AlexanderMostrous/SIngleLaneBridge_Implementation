@@ -1,5 +1,3 @@
-import java.io.FileWriter;
-
 public class Car extends Thread {
 	private long arrived, passing, passed;
 	private int num, colour;//colour: 1 == blue, 2 == red
@@ -22,28 +20,29 @@ public class Car extends Thread {
 				this.myScheduler.crossBridge(this);
 		}
 	}
-
-
-
-
-	public Scheduler getMyScheduler() {
+	
+	public Scheduler getMyScheduler() 
+	{
 		return myScheduler;
 	}
 
-	public void setMyScheduler(Scheduler myScheduler) {
+	public void setMyScheduler(Scheduler myScheduler) 
+	{
 		this.myScheduler = myScheduler;
 	}
 
-	public int getColour() {
+	public int getColour() 
+	{
 		return colour;
 	}
 
-	public void setColour(int colour) {
+	public void setColour(int colour) 
+	{
 		this.colour = colour;
 	}
 
-	public String toString(){
-
+	public String toString()
+	{
 
 		String text = "";
 
@@ -57,52 +56,51 @@ public class Car extends Thread {
 		return text;
 	}
 
-	/*
-	private void clearIrrelevantTime(){
-		this.arrived = arrived - Main.systemStartingTime;
-		this.passing = passing - Main.systemStartingTime;
-		this.passed = passed - Main.systemStartingTime;
-	}
-*/
-
-	public long getArrived() {
+	public long getArrived() 
+	{
 		return arrived;
 	}
 
-	public void setArrived(long arrived) {
+	public void setArrived(long arrived) 
+	{
 		arrived -= Main.systemStartingTime;
 		myLog.writeRegistry(this+" Arrived at "+arrived);
 	}
 
-	public long getPassing() {
+	public long getPassing() 
+	{
 		return passing;
 	}
 
-	public void setPassing(long passing) {
+	public void setPassing(long passing) 
+	{
 		passing -= Main.systemStartingTime; 
 		myLog.writeRegistry(this+" Passing at "+passing);
 	}
 
-	public long getPassed() {
+	public long getPassed() 
+	{
 		return passed;
 	}
 
-	public void setPassed(long passed) {
+	public void setPassed(long passed) 
+	{
 		passed -= Main.systemStartingTime; 
 		myLog.writeRegistry(this+" Passed at "+passed);
 	}
 
-	public int getNum() {
+	public int getNum() 
+	{
 		return num;
 	}
 
-	public void setNum(int num) {
+	public void setNum(int num) 
+	{
 		this.num = num;
 	}
 
 	public void setFinishedPassing(boolean finished)
 	{
 		finishedPassing = finished;
-	}
-		
+	}	
 }

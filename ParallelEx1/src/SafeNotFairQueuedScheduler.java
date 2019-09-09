@@ -1,13 +1,8 @@
 import java.util.concurrent.Semaphore;
 
-public class SafeNotFairQueuedScheduler extends Scheduler{
-
+public class SafeNotFairQueuedScheduler extends Scheduler
+{
 	private Semaphore bridgeOccupied = new Semaphore(1);
-
-	public SafeNotFairQueuedScheduler()
-	{
-		
-	}
 
 	public void crossBridge(Car c)
 	{
@@ -36,5 +31,4 @@ public class SafeNotFairQueuedScheduler extends Scheduler{
 		c.setPassed(System.currentTimeMillis());
 		c.setFinishedPassing(true);
 	}
-
 }

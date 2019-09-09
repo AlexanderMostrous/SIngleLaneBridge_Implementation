@@ -41,8 +41,7 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 						nextColour=2;
 					}
 				}
-				
-				
+					
 				currentTime = System.currentTimeMillis();
 				
 				//If we have a big wait in queue.
@@ -58,9 +57,7 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 						redSem.release();
 					}
 					
-				}
-				
-				
+				}	
 				else
 				{
 					if(c.getColour()==1)//If blue
@@ -82,7 +79,6 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 				{
 					timeLastBluePassed = System.currentTimeMillis();
 					redSem.release();
-
 				}
 				else
 				{
@@ -90,7 +86,6 @@ public class SafeRoundRobbinWithAdjustmentsScheduler extends Scheduler{
 					blueSem.release();
 				}
 				break;
-
 			}
 			catch (InterruptedException e){e.printStackTrace();}
 		}

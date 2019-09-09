@@ -1,19 +1,20 @@
 import java.util.ArrayList;
 
-public class CarGenerator extends Thread{
-
+public class CarGenerator extends Thread
+{
 	private int redCounter = 0, blueCounter = 0;
 	private Scheduler myScheduler;
 	private SystemLog log;
 	private boolean stop;
 
-	public CarGenerator(String directory){
-
+	public CarGenerator(String directory)
+	{
 		stop = false;
 		log = new SystemLog(directory);
 	}
 
-	public void run(){
+	public void run()
+	{
 		Car aCar;
 
 		ArrayList<Car> threadList = new ArrayList<Car>();
@@ -23,7 +24,6 @@ public class CarGenerator extends Thread{
 			aCar.setMyScheduler(myScheduler);
 			aCar.start();
 			threadList.add(aCar);
-			//System.out.println("A new car has just been created.");
 			try 
 			{
 				sleep((int)(1000/Main.carRate));
@@ -33,12 +33,11 @@ public class CarGenerator extends Thread{
 				e.printStackTrace();
 			}
 		}
-		
 		log.closeWriter();
 	}
 
-	public synchronized Car getNewRandomCar(){
-
+	public synchronized Car getNewRandomCar()
+	{
 		int num, colour;		
 		if(Math.random()>=0.5)
 		{
@@ -52,11 +51,8 @@ public class CarGenerator extends Thread{
 			num = blueCounter;
 			colour=1;
 		}
-
 		Car aCar = new Car(num,colour,this.myScheduler,log);
-
 		aCar.setArrived(System.currentTimeMillis());//Orizetai o xronos afikshs tou amaksiou sth gefyra.
-
 		return aCar;
 	}
 
@@ -70,7 +66,8 @@ public class CarGenerator extends Thread{
 		return this.myScheduler;
 	}
 
-	public SystemLog getLog() {
+	public SystemLog getLog() 
+	{
 		return log;
 	}
 
@@ -78,5 +75,4 @@ public class CarGenerator extends Thread{
 	{
 		stop = true;
 	}
-
 }

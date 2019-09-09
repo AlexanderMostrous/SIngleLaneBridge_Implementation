@@ -3,7 +3,6 @@ import java.util.concurrent.Semaphore;
 public class SafeRoundRobbinScheduler extends Scheduler{
 
 	private int nextColour;
-
 	private Semaphore blueSem = new Semaphore(1), redSem = new Semaphore(1);
 
 	/*
@@ -20,8 +19,7 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 	{
 		while(true){
 		try 
-		{
-			
+		{	
 			if(nextColour==0)//Beginning condition. Car is the first car.
 			{
 				if(c.getColour()==1)//If is blue car
@@ -47,7 +45,6 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 				//System.out.println("Red semaphore acquired.");
 			}
 
-
 			enterBridge(c);
 
 			Thread.sleep((int)(Main.crossingTime*1000));
@@ -56,12 +53,10 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 			if(c.getColour()==1)
 			{
 				redSem.release();
-				//System.out.println("Red semaphore released.");
 			}
 			else
 			{
 				blueSem.release();
-				//System.out.println("Blue semaphore released.");
 			}
 			break;
 
@@ -79,5 +74,4 @@ public class SafeRoundRobbinScheduler extends Scheduler{
 		c.setPassed(System.currentTimeMillis());
 		c.setFinishedPassing(true);
 	}
-
 }
